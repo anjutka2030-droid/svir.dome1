@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уединенный купол 50м² на Свири | SVIR.DOME</title>
+    
+    <style>
+        /* ИТОГОВАЯ ТЕПЛАЯ И ПРЕМИАЛЬНАЯ ПАЛИТРА */
+        :root {
+            --color-green-bright: #2E6F40; /* Сочный, яркий лесной зеленый */
+            --color-bg-warm: #E3DDD5;      /* Теплый уютный серо-коричневый фон */
+            --color-text-dark: #232624;   /* Глубокий графит для хорошей читаемости */
+            --color-beige-light: #F2EFEA;  /* Светлый бежевый для карточек и обводок */
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Manrope', sans-serif; background-color: var(--color-bg-warm); color: var(--color-text-dark); -webkit-font-smoothing: antialiased; }
+        
+        /* СЕТКА И КОНТЕЙНЕРЫ (MOBILE-FIRST) */
+        .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+        
+        /* КНОПКИ НА ОБЛОЖКЕ */
+        .btn-green { display: block; width: 100%; text-align: center; background-color: var(--color-green-bright); color: white; padding: 16px; border-radius: 50px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border: none; cursor: pointer; transition: all 0.3s ease; margin-bottom: 12px; }
+        .btn-outline { display: block; width: 100%; text-align: center; background-color: transparent; color: white; padding: 15px; border-radius: 50px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border: 2px solid white; cursor: pointer; transition: all 0.3s ease; }
+        
+        /* СТИЛЬНЫЕ МЕССЕНДЖЕРЫ В ЦВЕТ ФОНА */
+        .btn-messenger { display: block; width: 100%; text-align: center; background-color: var(--color-green-bright); color: var(--color-beige-light); padding: 16px; border-radius: 50px; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid var(--color-beige-light); transition: all 0.3s ease; }
+        
+        /* ГАЛЕРЕЯ КУПОЛА НА 12 ФОТОГРАФИЙ */
+        .gallery-container { display: flex; overflow-x: auto; gap: 12px; padding: 0 16px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .gallery-container::-webkit-scrollbar { display: none; }
+        .gallery-item { min-width: 85%; scroll-snap-align: start; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; background-color: #d1cbc4; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* СЕТКА ДЛЯ ДОСУГА СТРОГО 2 В РЯД */
+        .activities-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .activity-card { background-color: white; padding: 16px; border-radius: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+
+        /* СТИЛИ ДЛЯ ПОП-АПА (МОДАЛЬНОГО ОКНА) */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
+        .popup-content { background-color: white; width: 100%; max-width: 440px; max-height: 80vh; border-radius: 24px; padding: 24px; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .popup-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background-color: #e3ddd5; border-radius: 50%; border: none; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-dark); }
+
+        @media (min-width: 768px) {
+            .container { max-width: 1200px; padding: 0 40px; }
+            .gallery-container { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; padding: 0; gap: 16px; }
+            .gallery-item { min-width: auto; }
+            .activities-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .btn-green, .btn-outline { width: auto; padding: 16px 36px; display: inline-block; margin-bottom: 0; }
+            .popup-content { max-width: 600px; }
+            .hero-buttons { display: flex; justify-content: center; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ПОП-АП (ПОДРОБНОЕ ОПИСАНИЕ) -->
+    <div id="description-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button onclick="closePopup()" class="popup-close">×</button>
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; line-height: 1.3; color: #2E6F40;">🏠 Геокупол в сосновом лесу: ваш идеальный отдых на природе</h3>
+            <p style="font-size: 13px; line-height: 1.6; color: #4a4a4a; margin-bottom: 20px; font-weight: 300;">Ищете место, где можно забыть о городской суете и восстановить силы? Предлагаем аренду стильного геокупола площадью 50 кв. м — просторного, светлого и по-настоящему уютного. Здесь вас ждут тишина, аромат хвои и живописные виды, открывающиеся прямо из окон.</p>
+            
+            <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">🌲 Природные преимущества локации</h4>
+            <ul style="list-style-type: none; font-size: 13px; line-height: 1.5; color: #4a4a4a; margin-bottom: 20px; padding-left: 4px;">
+                <li style="margin-bottom: 8px;">• <strong>Сосновый лес:</strong> прогулки среди вековых деревьев и воздух, насыщенный фитонцидами.</li>
+                <li style="margin-bottom: 8px;">• <strong>Река в шаговой доступности:</strong> пикники на берегу, рыбалка круглый год, созерцание течения.</li>
+                <li style="margin-bottom: 8px;">• <strong>Сезонный сбор грибов и ягод:</strong> дары природы — буквально в шаге от купола.</li>
+            </ul>
+
+            <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">🔥 Комфорт и возможности</h4>
+            <ul style="list-style-type: none; font-size: 13px; line-height: 1.5; color: #4a4a4a; margin-bottom: 20px; padding-left: 4px;">
+                <li style="margin-bottom: 8px;">• <strong>Собственная баня:</strong> идеальный способ расслабиться после прогулки.</li>
+                <li style="margin-bottom: 8px;">• <strong>Продуманная планировка:</strong> всё необходимое для комфортного проживания.</li>
+                <li style="margin-bottom: 8px;">• <strong>Сотрудничество с фермером:</strong> свежие продукты, рекомендации по лучшим маршрутам, аренда лодок.</li>
+            </ul>
+
+            <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">📋 Условия проживания</h4>
+            <ul style="list-style-type: none; font-size: 13px; line-height: 1.5; color: #4a4a4a; margin-bottom: 20px; padding-left: 4px;">
+                <li style="margin-bottom: 6px;">• <strong>Залог:</strong> возвращается при сохранности имущества.</li>
+                <li style="margin-bottom: 6px;">• <strong>Время:</strong> заезд после 14:00; выезд до 12:00.</li>
+                <li style="margin-bottom: 6px;">• <strong>Дети и животные:</strong> с детьми разрешено; с животными — по согласованию.</li>
+            </ul>
+
+            <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #c27c38;">📍 Важная информация о дороге</h4>
+            <p style="font-size: 12px; line-height: 1.6; color: #666; margin-bottom: 16px; font-weight: 300;">Геокупол расположен в уединённом месте. Подъезд осуществляется по грунтовой дороге, пригодной только для внедорожников (УАЗ и аналоги). Для вашего удобства предусмотрена парковка: оставьте автомобиль там, а мы организуем трансфер до купола на УАЗе — надёжно, безопасно и без лишних переживаний за машину.</p>
+
+            <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🎯 Идеально подходит для:</h4>
+            <p style="font-size: 13px; color: #4a4a4a; font-weight: 300;">Спокойного семейного отдыха, романтических выходных или душевной встречи с друзьями на природе.</p>
+        </div>
+    </div>
+    <!-- 1. МИНИМАЛИСТИЧНАЯ ШАПКА -->
+    <header style="position: absolute; top: 0; left: 0; width: 100%; z-index: 50; padding: 20px 0;">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; gap: 4px;">
+            <span style="color: white; font-size: 20px; font-weight: 500; letter-spacing: 2px;">SVIR.DOME</span>
+            <span style="color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 300; letter-spacing: 0.5px;">Ленинградская обл., Лодейнопольский район</span>
+        </div>
+    </header>
+
+    <!-- 2. ОБЛОЖКА (ДОБАВИЛИ ВНУТРЕННИЕ ПОЛЯ К ТЕКСТУ СЛЕВА С ПОМОЩЬЮ PADDING) -->
+    <section style="position: relative; padding: 120px 0 48px 0; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
+            <img src="images/hero.jpg" alt="Лесной глэмпинг" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(227,221,213,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);"></div>
+        </div>
+
+        <div class="container" style="position: relative; z-index: 10; width: 100%;">
+            <!-- Задали аккуратный отступ в 20 пикселей, чтобы буквы не прижимались к краям телефона -->
+            <div style="text-align: left; padding-left: 20px; padding-right: 20px;">
+                <span style="color: white; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; background-color: rgba(46,111,64,0.75); padding: 6px 16px; border-radius: 50px; display: inline-block; margin-bottom: 16px; backdrop-filter: blur(4px);">Абсолютное уединение в лесу</span>
+                <h1 style="color: white; font-size: 32px; font-weight: 300; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.5px;">Большой купол <span style="font-weight: 600;">50 м²</span><br>в сосновом бору</h1>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; font-weight: 300; line-height: 1.6; max-width: 340px; margin-bottom: 32px;">Премиальный комфорт на стыке рек Свирь и Шоткуса. Дикая рыбалка, своя баня и свежие фермерские продукты.</p>
+            </div>
+            
+            <div class="hero-buttons" style="display: flex; flex-direction: column; gap: 12px; max-width: 290px; margin: 0 auto; padding: 0 20px;">
+                <button onclick="scrollToBooking()" class="btn-green">ЗАБРОНИРОВАТЬ</button>
+                <button onclick="openPopup()" class="btn-outline">ПОДРОБНОЕ ОПИСАНИЕ</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. ФОТОГАЛЕРЕЯ -->
+    <section style="padding: 32px 0; background-color: #E3DDD5;">
+        <div class="container" style="margin-bottom: 16px;">
+            <h2 style="font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #2E6F40;">Фотогалерея</h2>
+        </div>
+        
+        <div class="gallery-container">
+            <div class="gallery-item"><img src="images/room1.jpg" alt="Фото интерьера 1"></div>
+            <div class="gallery-item"><img src="images/room2.jpg" alt="Фото интерьера 2"></div>
+            <div class="gallery-item"><img src="images/room3.jpg" alt="Фото интерьера 3"></div>
+            <div class="gallery-item"><img src="images/room4.jpg" alt="Фото интерьера 4"></div>
+            <div class="gallery-item"><img src="images/room5.jpg" alt="Фото интерьера 5"></div>
+            <div class="gallery-item"><img src="images/room6.jpg" alt="Фото интерьера 6"></div>
+            <div class="gallery-item"><img src="images/room7.jpg" alt="Фото интерьера 7"></div>
+            <div class="gallery-item"><img src="images/room8.jpg" alt="Фото интерьера 8"></div>
+            <div class="gallery-item"><img src="images/room9.jpg" alt="Фото интерьера 9"></div>
+            <div class="gallery-item"><img src="images/room10.jpg" alt="Фото интерьера 10"></div>
+            <div class="gallery-item"><img src="images/room11.jpg" alt="Фото интерьера 11"></div>
+            <div class="gallery-item"><img src="images/room12.jpg" alt="Фото интерьера 12"></div>
+        </div>
+    </section>
+    <!-- 4. КАРТОЧКИ ДОСУГА -->
+    <section style="padding: 40px 0; background-color: rgba(255,255,255,0.25);">
+        <div class="container">
+            <span style="color: #2E6F40; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 6px;">Отдых</span>
+            <h2 style="font-size: 22px; font-weight: 300; margin-bottom: 24px; letter-spacing: -0.5px;">Чем заняться у нас в гостях</h2>
+            
+            <div class="activities-grid">
+                <div class="activity-card" style="border-top: 3px solid #2E6F40;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Рыбалка</h3>
+                    <p style="font-size: 11px; color: #555; font-weight: 300; line-height: 1.4;">Две дикие реки Свирь и Шоткуса прямо рядом.</p>
+                </div>
+                <div class="activity-card" style="border-top: 3px solid #2E6F40;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Сосновый бор</h3>
+                    <p style="font-size: 11px; color: #555; font-weight: 300; line-height: 1.4;">Чистый воздух, грибы и сочные ягоды у порога.</p>
+                </div>
+                <div class="activity-card" style="border-top: 3px solid #2E6F40;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Баня на дровах</h3>
+                    <p style="font-size: 11px; color: #555; font-weight: 300; line-height: 1.4;">Настоящий парной ритуал для расслабления.</p>
+                </div>
+                <div class="activity-card" style="border-top: 3px solid #2E6F40;">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Ферма</h3>
+                    <p style="font-size: 11px; color: #555; font-weight: 300; line-height: 1.4;">Домашние яйца, птица, свежее мясо и рыба.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. СЕЗОННЫЙ СТОИМОСТЬ -->
+    <section style="padding: 56px 0; background-color: #E3DDD5;">
+        <div class="container" style="text-align: center;">
+            <span style="color: #2E6F40; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 4px;">Стоимость</span>
+            <h2 style="font-size: 22px; font-weight: 300; margin-bottom: 28px; letter-spacing: -0.5px;">Прозрачный прайс</h2>
+            
+            <div style="background-color: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.01); text-align: left; max-width: 400px; margin: 0 auto; border-top: 4px solid #2E6F40;">
+                
+                <h4 style="font-size: 13px; font-weight: 700; color: #2E6F40; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">🍂 С октября по апрель:</h4>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #f2f2f7; margin-bottom: 10px;">
+                    <span style="font-size: 13px; color: #666; font-weight: 300;">Будние дни</span>
+                    <span style="font-size: 14px; font-weight: 600; color: #232624;">5 000 ₽ / сут</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 14px; margin-bottom: 16px;">
+                    <span style="font-size: 13px; color: #666; font-weight: 300;">Выходные дни</span>
+                    <span style="font-size: 14px; font-weight: 600; color: #232624;">7 000 ₽ / сут</span>
+                </div>
+
+                <h4 style="font-size: 13px; font-weight: 700; color: #2E6F40; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">🌿 С мая по сентябрь:</h4>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid #f2f2f7; margin-bottom: 10px;">
+                    <span style="font-size: 13px; color: #666; font-weight: 300;">Будние дни</span>
+                    <span style="font-size: 14px; font-weight: 600; color: #232624;">6 000 ₽ / сут</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid #f2f2f7; margin-bottom: 16px;">
+                    <span style="font-size: 14px; color: #666; font-weight: 300;">Выходные дни</span>
+                    <span style="font-size: 14px; font-weight: 600; color: #232624;">8 000 ₽ / сут</span>
+                </div>
+
+                <h4 style="font-size: 13px; font-weight: 700; color: #2E6F40; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">💨 Стоимость бани:</h4>
+                <p style="font-size: 13px; color: #232624; font-weight: 500; margin-bottom: 16px;">
+                    3 500 ₽ <span style="font-weight: 300; color: #666;">за 2 часа</span> <span style="color: #666; font-weight: 300; margin-left: 8px;">• продление:</span> 500 ₽ / час
+                </p>
+
+                <div style="border-top: 1px dashed #e3ddd5; padding-top: 12px;">
+                    <p style="font-size: 11px; color: #c27c38; font-weight: 600; margin-bottom: 4px;">🎉 Скидка в день рождения 10% (3 дня до и 3 дня после)</p>
+                    <p style="font-size: 11px; color: #8e8e93; font-weight: 300; line-height: 1.4;">* В Новогодние и майские праздники стоимость проживания выше, точные цены уточняйте при бронировании.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. КОНТАКТЫ (ИСПРАВИЛИ ССЫЛКУ КАРТ НА СТОПРОЦЕНТНО РАБОЧУЮ) -->
+    <section id="booking-section" style="padding: 64px 0; background-color: #2E6F40; color: white; border-top-left-radius: 32px; border-top-right-radius: 32px;">
+        <div class="container" style="text-align: center;">
+            <span style="color: rgba(255,255,255,0.7); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px;">Купол всего один</span>
+            <h2 style="font-size: 24px; font-weight: 300; margin-bottom: 12px; letter-spacing: -0.5px;">Выбрать способ бронирования</h2>
+            <p style="font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 300; line-height: 1.6; max-width: 320px; margin: 0 auto 32px;">Мы ответим вам в течение пары минут, подробно проконсультируем и зафиксируем за вами свободные даты.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 340px; margin: 0 auto 40px;">
+                <a href="https://wa.me/message/K4WC5SDOI7NIF1" target="_blank" class="btn-messenger">Написать в WhatsApp</a>
+                <a href="http://t.me/NADIN_DENISOVA_TG" target="_blank" class="btn-messenger">Написать в Telegram</a>
+                <a href="https://max.ru/u/f9LHodD0cOKUP5x5HgKpAdSZs3W8QI-Qq4cpwP4ayf6MAomAUW7kXCqW76Y" target="_blank" class="btn-messenger">Написать в мессенджер Макс</a>
+                <a href="tel:+79119596655" style="display: block; background-color: #F2EFEA; color: #2E6F40; text-decoration: none; padding: 16px; border-radius: 50px; font-size: 14px; font-weight: 600;">📞 Позвонить по телефону</a>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px;">
+                <p style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; font-weight: 300;">Как к нам добраться:</p>
+                <p style="font-size: 13px; font-weight: 300; line-height: 1.5; margin-bottom: 20px; padding: 0 24px;">Ленинградская область, Лодейнопольский район, между реками Свирь и Шоткуса.</p>
+                <!-- ПОЛНОСТЬЮ РАБОЧАЯ ГЕО-ССЫЛКА С ВАШИМИ КООРДИНАТАМИ -->
+                <a href="https://yandex.ru/maps/-/CXub7G6C" target="_blank" style="display: inline-block; border: 1px solid rgba(255,255,255,0.2); color: white; text-decoration: none; font-size: 12px; padding: 10px 24px; border-radius: 50px; background-color: rgba(255,255,255,0.05);">📍 Построить маршрут на Картах</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. ПОДВАЛ -->
+    <footer style="background-color: #1e4d2b; color: rgba(255,255,255,0.4); font-size: 11px; padding: 24px 0; text-align: center; font-weight: 300;">
+        <p>© 2026 SVIR.DOME. Все права защищены. Отдых в сосновом бору.</p>
+    </footer>
+
+    <!-- СКРИПТЫ -->
+    <script>
+        function scrollToBooking() {
+            document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        function openPopup() {
+            document.getElementById('description-popup').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+        }
+        function closePopup() {
+            document.getElementById('description-popup').style.display = 'none';
+            document.body.style.overflow = 'auto'; 
+        }
+    </script>
+</body>
+</html>
